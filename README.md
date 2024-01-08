@@ -1,3 +1,3 @@
 # notRipoffDesmos
-This is a graph plotter in code
-To use: look at main.py 
+This is a graph plotter in code \n
+Docs for use in main.py 
