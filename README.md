@@ -69,5 +69,5 @@ Features yet to be implemented:
 1. Minimum 1 graph
 2. Custom colours for each plot
 3. Custom X values for each graph
-4. Stop falsely advertising that it can divide by 0, it still breaks
+4. Make a note that error checking should we done by you
 5. pip install
