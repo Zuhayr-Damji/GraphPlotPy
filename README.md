@@ -1,7 +1,7 @@
 # notRipoffDesmos
 This is a graph plotter in code 
 
-Example 1:
+### Example 1:
 ```
 from notRipoffDesmos import FunctionPlotter
 
@@ -10,9 +10,10 @@ FunctionPlotter([
     ]
 )
 ```
-Plots 1 graph with one set of points
+![image](https://github.com/Zuhayr-Damji/notRipoffDesmos/assets/130306910/39ffa052-9cad-4b3f-aaf6-e0a8b7f732fb)
 
-Example 2:
+
+### Example 2:
 ```
 from notRipoffDesmos import FunctionPlotter
 import math
@@ -32,6 +33,41 @@ FunctionPlotter([
 )
 
 ```
-Plots 3 graphs with one set of points each (does not crash due to the divide by 0 error)
+![image](https://github.com/Zuhayr-Damji/notRipoffDesmos/assets/130306910/c915a72b-26d2-46f0-bb8b-ab2dd23bfdcb)
+
+### Example 3:
+```
+from notRipoffDesmos import FunctionPlotter
+import math
+import random
+
+def f(x):
+    if random.random() < 0.5:
+        return x/0
+    return x
+
+def ReLU(x):
+    return max(0,x)
+
+def Sigmoid(x):
+    return 1/(1+math.exp(-x))
+
+FunctionPlotter([
+        [lambda x : 4**x -x**6 , lambda x: math.sin(3**x / 3*x) , lambda x: math.cos(3**x / 3*x)],
+        [lambda x: math.tan(3**x / 3*x) , lambda x: math.cos(3**x / 3*x)],
+        [f],
+        [ReLU,lambda x: Sigmoid(x**4 + math.sin(x) + math.cos(x) + math.exp(x)), lambda x:x],
+    ]
+)
+
+
+```
 ![image](https://github.com/Zuhayr-Damji/notRipoffDesmos/assets/130306910/992d6f4a-8a1a-4391-a2b5-f0eadcb283ad)
 
+
+Features yet to be implemented:
+1. Minimum 1 graph
+2. Custom colours for each plot
+3. Custom X values for each graph
+4. Stop falsely advertising that it can divide by 0, it still breaks
+5. pip install
