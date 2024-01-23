@@ -1,21 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
+
 from typing import Callable
-
-
 from helpers import *
 
-'''
-how to use: FunctionPlotter([
-     [lambda x : x**4 - 4*x**2, lambda x : 9*x**4+6*x+(x/2)**8 , ... more functions],
-     [...]
-     [again]
-     [another one]
-     [as many as you want]
-])
-
-'''
-
+# For type hints:
+from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 
 def _customiseAxesDefault_(ax):
     ax.set_facecolor( color='black' )
@@ -28,32 +19,35 @@ def _customiseColorsDefault_():
     return getRandomColor()
 
 def FunctionPlotter( 
-        constructions:[[Callable]], #TODO: why this type hint no show up 
-        _customiseFig_:Callable = _customiseFigDefault_,
-        _customiseAxes_:Callable = _customiseAxesDefault_,
-        _customiseColors_:Callable = _customiseColorsDefault_,
+        constructions: list[list[Callable[[int|float],int|float]]], 
+        _customiseFig_:Callable[[Figure],None] = _customiseFigDefault_,
+        _customiseAxes_:Callable[[Axes],None] = _customiseAxesDefault_,
+        _customiseColors_:Callable[[None],None] = _customiseColorsDefault_,
         figsize:tuple = (8,5),
 )-> None:
     '''
-    constructions: list of list of functions
-    e.g [
-        [lambda x : x**2 - 9, lambda x : 4*x - 13],
-        [sigmoidFunction]
-    ] plots 2 graphs, the 1st with 2 sets of points on the same axes, the 2nd with 1
+    FunctionPlotter is a function that takes in a list of functions and creates a plot of them.
+    There are many custom settings that are implemented as callbacks
 
-    _customiseFig_: A function that takes in fig (plt.subplots first return value) and can _customise_ the figure e.g fig.set_color
-    _customiseAxes_: A function that takes in ax (plt.subplots second return value iterated over) and can _customise_ the axes e.g fig.set_facecolor
-    extra info found here: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html
+    Parameters:
+    constructions: A list of functions that will be plotted. Each element is a list of functions that will be plotted on the same graph.
+    _customiseFig_: A function that takes in a matplotlib figure and can customises it e.g fig.set_color
+    _customiseAxes_: A function that takes in ax (plt.subplots second return value iterated over) and can customise the axes e.g ax.set_facecolor
+    _customiseColors_: Should return a color string e.g random.choice(['#abcabc', '#abcdef'])
+    figsize: the figsize parameter passed to plt.subplots 
 
-    figsize: the figsize parameter passed to plt.subplots e.g random.choice(['#abcabc', '#abcdef'])
+    extra info on fig, axes and figsize found here: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html
 
     Notes on the graphs:
         - The minimum number of graphs plotted is 4 in an arrangement of (2,2)
         - The plot colors are random
     '''
-    if len(constructions) == 0: return # TODO: throw error
 
-    xValues = np.linspace( -5 , 5 , 100)
+    isConstructionsEmpty = len(constructions) == 0
+    if isConstructionsEmpty: 
+        raise invalidInputsException("No functions to plot") 
+
+    xValues = np.arange(-5,5,.01)
 
 
     numDimensions = len(constructions)
@@ -69,15 +63,22 @@ def FunctionPlotter(
 
     for index, graph in enumerate(constructions):
 
+        isGraphAList = type(graph) == type([])
+        if not isGraphAList:
+            raise invalidInputsException(f"Graph {graph} is not a list")
+
         xcoord, ycoord = getCoordinates(x, y,index)
         ax = axes[xcoord, ycoord]
         _customiseAxes_(ax)
 
-        for plot in graph: # TODO: input santisations
-            yValues = mapToNPArray(xValues, plot) 
-            ax.plot(xValues, yValues, color=_customiseColors_()) #TODO: custom colors
+        for plot in graph: 
+
+            isplotAFunction = type(plot) == type(lambda x: None)
+            if not isplotAFunction:
+                raise invalidInputsException(f"Plotting function {plot} is not a function") 
             
+            yValues = mapToNPArray(xValues, plot) 
+            ax.plot(xValues, yValues, color=_customiseColors_()) 
 
     plt.show()
-
 

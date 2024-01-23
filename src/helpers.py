@@ -1,12 +1,18 @@
-from numpy import array
+import numpy as np
 from random import randint
 from enum import Enum
 from sympy import isprime
 from colormap import rgb2hex
 
+class invalidInputsException(Exception):
+    def __init__(self, message:str="Incorrect Inputs provided"):
+        self.message = message
+        super().__init__(self.message)
+
+
 
 def mapToNPArray( xValues, function):
-    yValues = array([function(x) for x in xValues])
+    yValues = np.array([function(x) for x in xValues])
     return yValues
 
 def lowestSumList(lis):
@@ -33,7 +39,7 @@ def calculateDimensions(graphsNum:int):
     
     if isprime(graphsNum): 
         CONVERT_PRIME_TO_NONPRIME = 1
-        graphsNum = graphsNum + CONVERT_PRIME_TO_NONPRIME  # generally: primes are odd so +1 makes them even and not prime
+        graphsNum = graphsNum + CONVERT_PRIME_TO_NONPRIME  # generally primes are odd so + 1 makes them even and not prime
 
     solutions = []
 
@@ -66,8 +72,9 @@ def getCoordinates(x, y,num):
 class COLORTYPE(Enum):
     RGB = 0
     HEXADECIMAL = 1
-
+    #Add other types of colors and add them to the other stuff, maybe add this to a new package of its own
 def getRandomColor(colortype=COLORTYPE.HEXADECIMAL):
+
     r = randint(0,255)
     g = randint(0,255)
     b = randint(0,255)
@@ -78,3 +85,7 @@ def getRandomColor(colortype=COLORTYPE.HEXADECIMAL):
     }
 
     return colorTypeMapping.get(colortype)
+
+def rgbtohex(r,g,b):
+    r1 = r // 16
+    r2 = r % 16
