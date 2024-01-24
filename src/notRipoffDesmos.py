@@ -18,12 +18,76 @@ def _customiseFigDefault_(fig):
 def _customiseColorsDefault_():
     return getRandomColor()
 
+def formatCustomXvalues(customXValues, constructions):
+
+    if type(customXValues) == type(np.array([1,2,3])):
+        customXValues = [customXValues]
+
+    # if construction length 4 and customXValues length 2, repeat it twice or customXValues length 1, repeat it four times
+    # if construction length 5 and customXValues length 3, throw error      
+    isCustomXValuesLengthMultipleOfConstructionsLength = len(constructions) % len(customXValues) == 0
+    if isCustomXValuesLengthMultipleOfConstructionsLength:
+        customXValues = customXValues * int(len(constructions) / len(customXValues))
+
+    elif len(customXValues)!= len(constructions):
+        raise invalidInputsException(
+            "The length of customXValues must be a multiple of the length of constructions"
+        )
+    
+    return customXValues
+
+
+def genFigAndAxes(numDimensions, figsize, x, y):
+    if numDimensions <= 2:
+        fig, axes = plt.subplots( 
+            1, numDimensions,
+            figsize = figsize
+        )
+    elif numDimensions > 2:
+        fig, axes = plt.subplots( 
+            x, y,
+            figsize = figsize
+        )
+    return fig, axes
+
+def formatConstructions(constructions):
+
+    # lambda x : x**2 -> [lambda x: x**2]
+    isConstructionsOnlyOneFunction = type(constructions) == type(lambda x : None)
+    if isConstructionsOnlyOneFunction:
+        constructions = [constructions]
+    
+    if type(constructions)!= type([]):
+        raise invalidInputsException(
+            "constructions must be a single function, a list of functions, or a list of lists of functions"
+        )
+    
+    isConstructionsEmpty = len(constructions) == 0
+    if isConstructionsEmpty: 
+        raise invalidInputsException("No functions provided")
+    
+    # [lambda x: x**2] -> [[lambda x: x**2]]
+    isConstructionsOnlyOneListOfFunctions = areAllElementsInListOfCertainType(constructions, type(lambda x : None))
+    if isConstructionsOnlyOneListOfFunctions:
+        constructions = [constructions]
+
+    return constructions
+
+def generateEachGraphAxes(numDimensions, axes, xcoord, ycoord):
+    if numDimensions == 1:
+        ax = axes
+    elif numDimensions ==2:
+        ax = axes[ycoord]
+    else:
+        ax = axes[xcoord, ycoord]
+    return ax
+
 def FunctionPlotter( 
         constructions: list[list[Callable[[int|float],int|float]]] = [[lambda x: x]], 
         customiseFig:Callable[[Figure],None] = _customiseFigDefault_,
         customiseAxes:Callable[[Axes],None] = _customiseAxesDefault_,
         customiseColors:Callable[[None],None] = _customiseColorsDefault_,
-        customXValues: list[np.ndarray] | np.ndarray = [np.arange(-5,5,.01) for i in range(1)],
+        customXValues: list[np.ndarray] | np.ndarray = [np.arange(-5,5,.01)],
         figsize:tuple = (8,5), #TODO: make sure 2 ints in this tuple
 )-> None:
     '''
@@ -35,7 +99,7 @@ def FunctionPlotter(
     customiseFig: A function that takes in a matplotlib figure and can customises it e.g fig.set_color
     customiseAxes: A function that takes in ax (plt.subplots second return value iterated over) and can customise the axes e.g ax.set_facecolor
     customiseColors: Should return a color string e.g random.choice(['#abcabc', '#abcdef'])
-    customiseXValues: The x values to be used for each graph. Accepts either one set of values that is repeated for each graph (ndarray in or out of a list) or (for one set of values for each graph) a list of ndarrays of custom x values although the length must match the length of constructions
+    customiseXValues: The x values to be used for each graph. Must be either a single nd array or a list of nd arrays with length a factor of constructions' length (e.g constructions length 4 and customXValues length 2)
     figsize: the figsize parameter passed to plt.subplots 
 
     extra info on fig, axes and figsize found here: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html
@@ -44,39 +108,17 @@ def FunctionPlotter(
         - The minimum number of graphs plotted is 4 in an arrangement of (2,2)
         - The plot colors are random
     '''
-
-    isConstructionsEmpty = len(constructions) == 0
-    if isConstructionsEmpty: 
-        raise invalidInputsException("No functions to plot")
+    #TODO: *args to make a list, a debug mode as well
     
-    # if customXValues is one item long, remove it from the list
-    if customXValues.shape == np.array([1]).shape:
-        customXValues = customXValues[0]
-    if type(customXValues) == type(np.array([1,2,3])):
-        xValues = [customXValues for i in range(len(constructions))]
-    elif len(customXValues)!= len(constructions):
-            raise invalidInputsException("customXValues and constructions must be the same length (if you wish to repeat your custom set of x values for each graph, you only need to put the customXValues once either in a list or out)")
-
+    constructions = formatConstructions(constructions)
+    customXValues = formatCustomXvalues(customXValues, constructions)
 
     numDimensions = len(constructions)
-
-        
-
     x, y = calculateDimensions(numDimensions)
 
-    if numDimensions <= 2:
-        fig, axes = plt.subplots( 
-            1, numDimensions,
-            figsize = figsize
-        )
-    elif numDimensions > 2:
-        fig, axes = plt.subplots( 
-            x, y,
-            figsize = figsize
-        )
+    fig, axes = genFigAndAxes(numDimensions, figsize, x, y)
         
     customiseFig(fig)
-
 
 
     for index, graph in enumerate(constructions):
@@ -90,22 +132,17 @@ def FunctionPlotter(
         
         xcoord, ycoord = getCoordinates(x, y,index)
 
-        if numDimensions == 1:
-            ax = axes
-        elif numDimensions ==2 :
-            ax = axes[ycoord]
-        elif numDimensions > 3:
-            ax = axes[xcoord, ycoord]
+        ax = generateEachGraphAxes(numDimensions, axes, xcoord, ycoord) 
 
         customiseAxes(ax)
 
-        for plot in graph: 
+        for plottingFunction in graph: 
 
-            isplotAFunction = type(plot) == type(lambda x: None)
-            if not isplotAFunction:
-                raise invalidInputsException(f"Plotting function {plot} is not a function") 
+            isplottingFunctionActuallyAFunction = type(plottingFunction) == type(lambda x: None)
+            if not isplottingFunctionActuallyAFunction:
+                raise invalidInputsException(f"{plottingFunction} is not a function") 
             
-            yValues = mapToNPArray(xValues, plot) 
+            yValues = mapToNPArray(xValues, plottingFunction) 
             ax.plot(xValues, yValues, color=customiseColors()) 
 
     plt.show()

@@ -89,3 +89,10 @@ def getRandomColor(colortype=COLORTYPE.HEXADECIMAL):
 def rgbtohex(r,g,b):
     r1 = r // 16
     r2 = r % 16
+
+def areAllElementsInListOfCertainType(listOfElements, dataType):
+    if type(listOfElements)!= list: return
+    for element in listOfElements:
+        if type(element)!= dataType:
+            return False
+    return True
