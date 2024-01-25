@@ -12,6 +12,9 @@ FunctionPlotter(
     [[lambda x :  math.sin(x) + math.cos(x) + math.tan(x)]],
 )
 ```
+![image](https://github.com/Zuhayr-Damji/notRipoffDesmos/assets/130306910/531ef9c0-88d2-48c8-a32c-863b2177d381)
+
+
 ### Example 2:
 ```
 from notRipoffDesmos import FunctionPlotter
@@ -44,11 +47,62 @@ FunctionPlotter([
 Note that error checking should be implemented in the functions passed into FunctionPlotter, this can only handle certain errors without breaking
 
 You can pass in some custom x values for each graph in the format of an array with length a factor of the length of the constructions parameter
+```
+FunctionPlotter([
+        [lambda x : 4**x -x**6 , lambda x: math.sin(3**x / 3*x) , lambda x: math.cos(3**x / 3*x)],
+        [lambda x: math.tan(3**x / 3*x) , lambda x: math.cos(3**x / 3*x)],
+        [f],
+        [ReLU,lambda x: Sigmoid(x**4 + math.sin(x) + math.cos(x) + math.exp(x)), lambda x:x],
+    ],
+    customXValues = [np.arange(0,10,0.1),np.arange(-5,5,0.01)]
+# or customXValues=[np.arange(0,10,0.1)] or customXValues=[np.arange(0,10,0.1),np.arange(-5,5,0.01), np.linspace(0,10,100),np.linspace(-10,-7,100)]
+# not [np.arange(0,10,0.1),np.arange(-5,5,0.01), np.arange(-5,5,0.01)]
+)
+```
+This would also be valid
+```
+```
+For the constructions parameter, the functions can be in a single list only (if you only want one graph) or a single function only (only one plot on one graph):
+```
+FunctionPlotter(
+    [[lambda x :  math.sin(x) + math.cos(x) + math.tan(x)]],
+)
+```
+Is the same as:
+```
+FunctionPlotter(
+    [lambda x :  math.sin(x) + math.cos(x) + math.tan(x)],
+)
+```
+or:
+```
+FunctionPlotter(
+    lambda x :  math.sin(x) + math.cos(x) + math.tan(x),
+)
+```
 
-For the constructions parameter, the functions can be in a single list only (if you only want one graph) or a single function only (only one plot on one graph)
+This would also be valid:
+```
+FunctionPlotter(
+    [lambda x :  math.sin(x) + math.cos(x) + math.tan(x), lambda x : max(x,0)]
+)
 
+```
 ### Example 3:
+```
+from notRipoffDesmos import FunctionPlotter
+import math
+import numpy as np
+
+FunctionPlotter(
+    lambda x : 3*math.e**(2*-x),
+    customXValues=[np.linspace(-7, 10, 100)],
+)
+
+```
+![image](https://github.com/Zuhayr-Damji/notRipoffDesmos/assets/130306910/6de92bb8-8e5e-48a0-9275-8f3708c50cf4)
+
 
 Features yet to be implemented:
 Custom colors for each plot
-5. pip install
+Add this to PyPi
