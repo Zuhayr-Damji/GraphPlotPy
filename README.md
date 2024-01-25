@@ -1,41 +1,18 @@
 # notRipoffDesmos
 This is a graph plotter in code 
-
 ### Example 1:
 ```
 from notRipoffDesmos import FunctionPlotter
 
-FunctionPlotter([
-        [lambda x : 4**x -x**6 ],
-    ]
-)
-```
-![image](https://github.com/Zuhayr-Damji/notRipoffDesmos/assets/130306910/39ffa052-9cad-4b3f-aaf6-e0a8b7f732fb)
-
-
-### Example 2:
-```
-from notRipoffDesmos import FunctionPlotter
+import numpy as np
 import math
-import random
-
-def f(x):
-    if random.random() < 0.5:
-        return x/0
-    return x
 
 
-FunctionPlotter([
-        [lambda x : 4**x -x**6 ],
-        [lambda x: 20000*(math.e)**(-x/10)],
-        [f]
-    ]
+FunctionPlotter(
+    [[lambda x :  math.sin(x) + math.cos(x) + math.tan(x)]],
 )
-
 ```
-![image](https://github.com/Zuhayr-Damji/notRipoffDesmos/assets/130306910/c915a72b-26d2-46f0-bb8b-ab2dd23bfdcb)
-
-### Example 3:
+### Example 2:
 ```
 from notRipoffDesmos import FunctionPlotter
 import math
@@ -64,8 +41,14 @@ FunctionPlotter([
 ```
 ![image](https://github.com/Zuhayr-Damji/notRipoffDesmos/assets/130306910/992d6f4a-8a1a-4391-a2b5-f0eadcb283ad)
 
+Note that error checking should be implemented in the functions passed into FunctionPlotter, this can only handle certain errors without breaking
+
+You can pass in some custom x values for each graph in the format of an array with length a factor of the length of the constructions parameter
+
+For the constructions parameter, the functions can be in a single list only (if you only want one graph) or a single function only (only one plot on one graph)
+
+### Example 3:
 
 Features yet to be implemented:
-2. Custom colours for each plot
-4. Make a note that error checking should we done by you
+Custom colors for each plot
 5. pip install
