@@ -1,5 +1,6 @@
 # notRipoffDesmos
 This is a graph plotter in code 
+
 ### Example 1:
 ```python
 from notRipoffDesmos import FunctionPlotter
@@ -86,7 +87,6 @@ This would also be valid:
 FunctionPlotter(
     [lambda x :  math.sin(x) + math.cos(x) + math.tan(x), lambda x : max(x,0)]
 )
-
 ```
 ### Example 3:
 ```python
@@ -104,5 +104,5 @@ FunctionPlotter(
 
 
 Features yet to be implemented:
-Custom colors for each plot
-Add this to PyPi
+1. Custom colors for each plot
+2. Add this to PyPi

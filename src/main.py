@@ -1,9 +1,8 @@
-from notRipoffDesmos import FunctionPlotter
-
-import numpy as np
+from graphPlotPy import FunctionPlotter
 import math
-
+import numpy as np
 
 FunctionPlotter(
-    [[lambda x :  math.sin(x) + math.cos(x) + math.tan(x)]],
+    lambda x : 3*math.e**(2*-x),
+    customXValues=[np.linspace(-7, 10, 100)],
 )
