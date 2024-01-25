@@ -1,7 +1,7 @@
 # notRipoffDesmos
 This is a graph plotter in code 
 ### Example 1:
-```
+```py
 from notRipoffDesmos import FunctionPlotter
 
 import numpy as np
@@ -16,7 +16,7 @@ FunctionPlotter(
 
 
 ### Example 2:
-```
+```python
 from notRipoffDesmos import FunctionPlotter
 import math
 import random
