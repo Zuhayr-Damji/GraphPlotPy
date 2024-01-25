@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from typing import Callable
-from helpers import *
+from graphPlotPy.graphUtils import *
 
 # For type hints:
 from matplotlib.figure import Figure
