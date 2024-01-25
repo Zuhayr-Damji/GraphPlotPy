@@ -1,7 +1,7 @@
 # notRipoffDesmos
 This is a graph plotter in code 
 ### Example 1:
-```py
+```python
 from notRipoffDesmos import FunctionPlotter
 
 import numpy as np
@@ -47,7 +47,7 @@ FunctionPlotter([
 Note that error checking should be implemented in the functions passed into FunctionPlotter, this can only handle certain errors without breaking
 
 You can pass in some custom x values for each graph in the format of an array with length a factor of the length of the constructions parameter
-```
+```python
 FunctionPlotter([
         [lambda x : 4**x -x**6 , lambda x: math.sin(3**x / 3*x) , lambda x: math.cos(3**x / 3*x)],
         [lambda x: math.tan(3**x / 3*x) , lambda x: math.cos(3**x / 3*x)],
@@ -63,33 +63,33 @@ This would also be valid
 ```
 ```
 For the constructions parameter, the functions can be in a single list only (if you only want one graph) or a single function only (only one plot on one graph):
-```
+```python
 FunctionPlotter(
     [[lambda x :  math.sin(x) + math.cos(x) + math.tan(x)]],
 )
 ```
 Is the same as:
-```
+```python
 FunctionPlotter(
     [lambda x :  math.sin(x) + math.cos(x) + math.tan(x)],
 )
 ```
 or:
-```
+```python
 FunctionPlotter(
     lambda x :  math.sin(x) + math.cos(x) + math.tan(x),
 )
 ```
 
 This would also be valid:
-```
+```python
 FunctionPlotter(
     [lambda x :  math.sin(x) + math.cos(x) + math.tan(x), lambda x : max(x,0)]
 )
 
 ```
 ### Example 3:
-```
+```python
 from notRipoffDesmos import FunctionPlotter
 import math
 import numpy as np
