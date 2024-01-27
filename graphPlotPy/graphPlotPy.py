@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from typing import Callable
 from graphPlotPy.graphUtils import *
 
 # For type hints:
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
+from typing import Callable, Tuple
 
 def _customiseAxesDefault_(ax):
     ax.set_facecolor( color='black' )
@@ -20,18 +20,19 @@ def _customiseColorsDefault_():
 
 def formatCustomXvalues(customXValues, constructions):
 
-    if type(customXValues) == type(np.array([1,2,3])):
-        customXValues = [customXValues]
+    isCustomxValuesNPArray = type(customXValues) == type(np.array([1,2,3]))
+    if isCustomxValuesNPArray:
+        customXValues = [customXValues] # make 2d to mathc constructions
 
     # if construction length 4 and customXValues length 2, repeat it twice or customXValues length 1, repeat it four times
     # if construction length 5 and customXValues length 3, throw error      
-    isCustomXValuesLengthMultipleOfConstructionsLength = len(constructions) % len(customXValues) == 0
-    if isCustomXValuesLengthMultipleOfConstructionsLength:
+    isCustomXValuesLengthFactorOfConstructionsLength = len(constructions) % len(customXValues) == 0
+    if isCustomXValuesLengthFactorOfConstructionsLength:
         customXValues = customXValues * int(len(constructions) / len(customXValues))
 
     elif len(customXValues)!= len(constructions):
         raise invalidInputsException(
-            "The length of customXValues must be a multiple of the length of constructions"
+            "The length of customXValues must be a factor of the length of constructions"
         )
     
     return customXValues
@@ -76,19 +77,19 @@ def formatConstructions(constructions):
 def generateEachGraphAxes(numDimensions, axes, xcoord, ycoord):
     if numDimensions == 1:
         ax = axes
-    elif numDimensions ==2:
+    elif numDimensions == 2:
         ax = axes[ycoord]
     else:
         ax = axes[xcoord, ycoord]
     return ax
 
 def FunctionPlotter( 
-        constructions: list[list[Callable[[int|float],int|float]]] = [[lambda x: x]], 
+        constructions: list[list[Callable[[int|float],int|float]]] | list[Callable[[int|float],int|float]] | Callable[[int|float],int|float] = [[lambda x: x]], 
         customiseFig:Callable[[Figure],None] = _customiseFigDefault_,
         customiseAxes:Callable[[Axes],None] = _customiseAxesDefault_,
-        customiseColors:Callable[[None],None] = _customiseColorsDefault_,
-        customXValues: list[np.ndarray] | np.ndarray = [np.arange(-5,5,.01)],
-        figsize:tuple = (8,5), #TODO: make sure 2 ints in this tuple
+        customiseColors:Callable[[None],str] = _customiseColorsDefault_,
+        customXValues: list[np.ndarray] | np.ndarray = np.arange(-5,5,1),
+        figsize:Tuple[int,int] = (8,5), 
 )-> None:
     '''
     FunctionPlotter is a function that takes in a list of functions and creates a plot of them.
@@ -108,7 +109,6 @@ def FunctionPlotter(
         - The minimum number of graphs plotted is 4 in an arrangement of (2,2)
         - The plot colors are random
     '''
-    #TODO: *args to make a list, a debug mode as well
     
     constructions = formatConstructions(constructions)
     customXValues = formatCustomXvalues(customXValues, constructions)
@@ -131,9 +131,7 @@ def FunctionPlotter(
         
         
         xcoord, ycoord = getCoordinates(x, y,index)
-
         ax = generateEachGraphAxes(numDimensions, axes, xcoord, ycoord) 
-
         customiseAxes(ax)
 
         for plottingFunction in graph: 
@@ -142,7 +140,7 @@ def FunctionPlotter(
             if not isplottingFunctionActuallyAFunction:
                 raise invalidInputsException(f"{plottingFunction} is not a function") 
             
-            yValues = mapToNPArray(xValues, plottingFunction) 
+            yValues = mapFunctionToNPArray(xValues, plottingFunction) 
             ax.plot(xValues, yValues, color=customiseColors()) 
 
     plt.show()

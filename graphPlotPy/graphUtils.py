@@ -10,8 +10,7 @@ class invalidInputsException(Exception):
         super().__init__(self.message)
 
 
-
-def mapToNPArray( xValues, function):
+def mapFunctionToNPArray(xValues, function):
     yValues = np.array([function(x) for x in xValues])
     return yValues
 
@@ -39,7 +38,7 @@ def calculateDimensions(graphsNum:int):
     
     if isprime(graphsNum): 
         CONVERT_PRIME_TO_NONPRIME = 1
-        graphsNum = graphsNum + CONVERT_PRIME_TO_NONPRIME  # generally primes are odd so + 1 makes them even and not prime
+        graphsNum = graphsNum + CONVERT_PRIME_TO_NONPRIME  # generally, primes are odd so + 1 makes them even (not prime)
 
     solutions = []
 
@@ -72,7 +71,6 @@ def getCoordinates(x, y,num):
 class COLORTYPE(Enum):
     RGB = 0
     HEXADECIMAL = 1
-    #Add other types of colors and add them to the other stuff, maybe add this to a new package of its own
 def getRandomColor(colortype=COLORTYPE.HEXADECIMAL):
 
     r = randint(0,255)
