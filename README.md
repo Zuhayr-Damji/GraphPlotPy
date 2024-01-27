@@ -11,6 +11,7 @@ FunctionPlotter(
     [[lambda x :  1.23456789**x]]
 )
 ```
+![image](https://github.com/Zuhayr-Damji/GraphPlotPy/assets/130306910/3b2fc5b2-f172-48e7-9bac-a0539a7ff8a2)
 
 
 ### Example 2:
