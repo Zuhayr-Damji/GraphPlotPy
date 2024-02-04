@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from graphPlotPy.graphUtils import *
+from graphPlotPy.src.graphUtils import *
 
 # For type hints:
 from matplotlib.figure import Figure
@@ -103,11 +103,8 @@ def FunctionPlotter(
     customiseXValues: The x values to be used for each graph. Must be either a single nd array or a list of nd arrays with length a factor of constructions' length (e.g constructions length 4 and customXValues length 2)
     figsize: the figsize parameter passed to plt.subplots 
 
-    extra info on fig, axes and figsize found here: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html
-
-    Notes on the graphs:
-        - The minimum number of graphs plotted is 4 in an arrangement of (2,2)
-        - The plot colors are random
+    Extra info on fig, axes and figsize found here: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplots.html
+    Find the github page for more info: https://github.com/Zuhayr-Damji/GraphPlotPy.git
     '''
     
     constructions = formatConstructions(constructions)

@@ -1,1 +1,1 @@
-from graphPlotPy.graphPlotPy import FunctionPlotter
+from graphPlotPy.src.graphPlotPy import FunctionPlotter
